@@ -1,0 +1,2058 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
+
+-- Started on 2019-10-29 02:44:49 CST
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 1 (class 3079 OID 13081)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 3167 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 203 (class 1259 OID 16777)
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 16775)
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_group_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3168 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: auth_group_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_group_id_seq OWNED BY public.auth_group.id;
+
+
+--
+-- TOC entry 205 (class 1259 OID 16787)
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id integer NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 16785)
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_group_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_group_permissions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3169 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_group_permissions_id_seq OWNED BY public.auth_group_permissions.id;
+
+
+--
+-- TOC entry 201 (class 1259 OID 16769)
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 16767)
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_permission_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3170 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: auth_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_permission_id_seq OWNED BY public.auth_permission.id;
+
+
+--
+-- TOC entry 207 (class 1259 OID 16795)
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(30) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.auth_user OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 16805)
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user_groups (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_groups OWNER TO postgres;
+
+--
+-- TOC entry 208 (class 1259 OID 16803)
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_user_groups_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_groups_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3171 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_user_groups_id_seq OWNED BY public.auth_user_groups.id;
+
+
+--
+-- TOC entry 206 (class 1259 OID 16793)
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3172 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: auth_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_user_id_seq OWNED BY public.auth_user.id;
+
+
+--
+-- TOC entry 211 (class 1259 OID 16813)
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user_user_permissions (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_user_permissions OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 16811)
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.auth_user_user_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.auth_user_user_permissions_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3173 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_user_user_permissions.id;
+
+
+--
+-- TOC entry 213 (class 1259 OID 16873)
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO postgres;
+
+--
+-- TOC entry 212 (class 1259 OID 16871)
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_admin_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_admin_log_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3174 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: django_admin_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_admin_log_id_seq OWNED BY public.django_admin_log.id;
+
+
+--
+-- TOC entry 199 (class 1259 OID 16759)
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO postgres;
+
+--
+-- TOC entry 198 (class 1259 OID 16757)
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_content_type_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_content_type_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3175 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: django_content_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_type.id;
+
+
+--
+-- TOC entry 197 (class 1259 OID 16748)
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_migrations (
+    id integer NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO postgres;
+
+--
+-- TOC entry 196 (class 1259 OID 16746)
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_migrations_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_migrations_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3176 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: django_migrations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_migrations_id_seq OWNED BY public.django_migrations.id;
+
+
+--
+-- TOC entry 226 (class 1259 OID 16970)
+-- Name: django_session; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 16939)
+-- Name: prediccion_productos_producto; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prediccion_productos_producto (
+    id integer NOT NULL,
+    producto text NOT NULL
+);
+
+
+ALTER TABLE public.prediccion_productos_producto OWNER TO postgres;
+
+--
+-- TOC entry 220 (class 1259 OID 16937)
+-- Name: prediccion_productos_producto_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.prediccion_productos_producto_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prediccion_productos_producto_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3177 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: prediccion_productos_producto_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.prediccion_productos_producto_id_seq OWNED BY public.prediccion_productos_producto.id;
+
+
+--
+-- TOC entry 223 (class 1259 OID 16950)
+-- Name: prediccion_productos_redneuronalresultados; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prediccion_productos_redneuronalresultados (
+    id integer NOT NULL,
+    clasificacion text NOT NULL,
+    periodo text NOT NULL,
+    dam double precision,
+    pema double precision,
+    rmse double precision,
+    look_back integer NOT NULL,
+    neuronas integer NOT NULL,
+    epocas integer NOT NULL,
+    eval_dir text,
+    pred_dir text,
+    dam_dir text,
+    pema_dir text,
+    rmse_dir text
+);
+
+
+ALTER TABLE public.prediccion_productos_redneuronalresultados OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 16948)
+-- Name: prediccion_productos_redneuronalresultados_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.prediccion_productos_redneuronalresultados_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prediccion_productos_redneuronalresultados_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3178 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: prediccion_productos_redneuronalresultados_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.prediccion_productos_redneuronalresultados_id_seq OWNED BY public.prediccion_productos_redneuronalresultados.id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 16961)
+-- Name: prediccion_productos_registroventa; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prediccion_productos_registroventa (
+    id integer NOT NULL,
+    fecha date NOT NULL,
+    empresa text,
+    ruc text,
+    precio double precision,
+    tipo text
+);
+
+
+ALTER TABLE public.prediccion_productos_registroventa OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 16959)
+-- Name: prediccion_productos_registroventa_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.prediccion_productos_registroventa_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prediccion_productos_registroventa_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3179 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: prediccion_productos_registroventa_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.prediccion_productos_registroventa_id_seq OWNED BY public.prediccion_productos_registroventa.id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 16906)
+-- Name: prediccion_redneuronalresultados; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prediccion_redneuronalresultados (
+    id integer NOT NULL,
+    clasificacion text NOT NULL,
+    periodo text NOT NULL,
+    dam double precision,
+    pema double precision,
+    rmse double precision,
+    look_back integer NOT NULL,
+    neuronas integer NOT NULL,
+    epocas integer NOT NULL,
+    eval_dir text,
+    pred_dir text,
+    dam_dir text,
+    pema_dir text,
+    rmse_dir text
+);
+
+
+ALTER TABLE public.prediccion_redneuronalresultados OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 16904)
+-- Name: prediccion_redneuronalresultados_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.prediccion_redneuronalresultados_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prediccion_redneuronalresultados_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3180 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: prediccion_redneuronalresultados_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.prediccion_redneuronalresultados_id_seq OWNED BY public.prediccion_redneuronalresultados.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 16917)
+-- Name: prediccion_registroventa; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prediccion_registroventa (
+    id integer NOT NULL,
+    fecha date NOT NULL,
+    empresa text NOT NULL,
+    ruc text NOT NULL,
+    precio double precision NOT NULL,
+    tipo text NOT NULL
+);
+
+
+ALTER TABLE public.prediccion_registroventa OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 16915)
+-- Name: prediccion_registroventa_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.prediccion_registroventa_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prediccion_registroventa_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3181 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: prediccion_registroventa_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.prediccion_registroventa_id_seq OWNED BY public.prediccion_registroventa.id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 16928)
+-- Name: prediccion_servicio; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.prediccion_servicio (
+    id integer NOT NULL,
+    servicio text NOT NULL
+);
+
+
+ALTER TABLE public.prediccion_servicio OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 16926)
+-- Name: prediccion_servicio_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.prediccion_servicio_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prediccion_servicio_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3182 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: prediccion_servicio_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.prediccion_servicio_id_seq OWNED BY public.prediccion_servicio.id;
+
+
+--
+-- TOC entry 2927 (class 2604 OID 16780)
+-- Name: auth_group id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group ALTER COLUMN id SET DEFAULT nextval('public.auth_group_id_seq'::regclass);
+
+
+--
+-- TOC entry 2928 (class 2604 OID 16790)
+-- Name: auth_group_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_group_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 2926 (class 2604 OID 16772)
+-- Name: auth_permission id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission ALTER COLUMN id SET DEFAULT nextval('public.auth_permission_id_seq'::regclass);
+
+
+--
+-- TOC entry 2929 (class 2604 OID 16798)
+-- Name: auth_user id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user ALTER COLUMN id SET DEFAULT nextval('public.auth_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 2930 (class 2604 OID 16808)
+-- Name: auth_user_groups id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups ALTER COLUMN id SET DEFAULT nextval('public.auth_user_groups_id_seq'::regclass);
+
+
+--
+-- TOC entry 2931 (class 2604 OID 16816)
+-- Name: auth_user_user_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions ALTER COLUMN id SET DEFAULT nextval('public.auth_user_user_permissions_id_seq'::regclass);
+
+
+--
+-- TOC entry 2932 (class 2604 OID 16876)
+-- Name: django_admin_log id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log ALTER COLUMN id SET DEFAULT nextval('public.django_admin_log_id_seq'::regclass);
+
+
+--
+-- TOC entry 2925 (class 2604 OID 16762)
+-- Name: django_content_type id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval('public.django_content_type_id_seq'::regclass);
+
+
+--
+-- TOC entry 2924 (class 2604 OID 16751)
+-- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations ALTER COLUMN id SET DEFAULT nextval('public.django_migrations_id_seq'::regclass);
+
+
+--
+-- TOC entry 2937 (class 2604 OID 16942)
+-- Name: prediccion_productos_producto id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_productos_producto ALTER COLUMN id SET DEFAULT nextval('public.prediccion_productos_producto_id_seq'::regclass);
+
+
+--
+-- TOC entry 2938 (class 2604 OID 16953)
+-- Name: prediccion_productos_redneuronalresultados id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_productos_redneuronalresultados ALTER COLUMN id SET DEFAULT nextval('public.prediccion_productos_redneuronalresultados_id_seq'::regclass);
+
+
+--
+-- TOC entry 2939 (class 2604 OID 16964)
+-- Name: prediccion_productos_registroventa id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_productos_registroventa ALTER COLUMN id SET DEFAULT nextval('public.prediccion_productos_registroventa_id_seq'::regclass);
+
+
+--
+-- TOC entry 2934 (class 2604 OID 16909)
+-- Name: prediccion_redneuronalresultados id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_redneuronalresultados ALTER COLUMN id SET DEFAULT nextval('public.prediccion_redneuronalresultados_id_seq'::regclass);
+
+
+--
+-- TOC entry 2935 (class 2604 OID 16920)
+-- Name: prediccion_registroventa id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_registroventa ALTER COLUMN id SET DEFAULT nextval('public.prediccion_registroventa_id_seq'::regclass);
+
+
+--
+-- TOC entry 2936 (class 2604 OID 16931)
+-- Name: prediccion_servicio id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_servicio ALTER COLUMN id SET DEFAULT nextval('public.prediccion_servicio_id_seq'::regclass);
+
+
+--
+-- TOC entry 3136 (class 0 OID 16777)
+-- Dependencies: 203
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3138 (class 0 OID 16787)
+-- Dependencies: 205
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3134 (class 0 OID 16769)
+-- Dependencies: 201
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add log entry	1	add_logentry
+2	Can change log entry	1	change_logentry
+3	Can delete log entry	1	delete_logentry
+4	Can view log entry	1	view_logentry
+5	Can add permission	2	add_permission
+6	Can change permission	2	change_permission
+7	Can delete permission	2	delete_permission
+8	Can view permission	2	view_permission
+9	Can add group	3	add_group
+10	Can change group	3	change_group
+11	Can delete group	3	delete_group
+12	Can view group	3	view_group
+13	Can add user	4	add_user
+14	Can change user	4	change_user
+15	Can delete user	4	delete_user
+16	Can view user	4	view_user
+17	Can add content type	5	add_contenttype
+18	Can change content type	5	change_contenttype
+19	Can delete content type	5	delete_contenttype
+20	Can view content type	5	view_contenttype
+21	Can add session	6	add_session
+22	Can change session	6	change_session
+23	Can delete session	6	delete_session
+24	Can view session	6	view_session
+25	Can add red neuronal resultados	7	add_redneuronalresultados
+26	Can change red neuronal resultados	7	change_redneuronalresultados
+27	Can delete red neuronal resultados	7	delete_redneuronalresultados
+28	Can view red neuronal resultados	7	view_redneuronalresultados
+29	Can add registro venta	8	add_registroventa
+30	Can change registro venta	8	change_registroventa
+31	Can delete registro venta	8	delete_registroventa
+32	Can view registro venta	8	view_registroventa
+33	Can add servicio	9	add_servicio
+34	Can change servicio	9	change_servicio
+35	Can delete servicio	9	delete_servicio
+36	Can view servicio	9	view_servicio
+37	Can add producto	10	add_producto
+38	Can change producto	10	change_producto
+39	Can delete producto	10	delete_producto
+40	Can view producto	10	view_producto
+41	Can add red neuronal resultados	11	add_redneuronalresultados
+42	Can change red neuronal resultados	11	change_redneuronalresultados
+43	Can delete red neuronal resultados	11	delete_redneuronalresultados
+44	Can view red neuronal resultados	11	view_redneuronalresultados
+45	Can add registro venta	12	add_registroventa
+46	Can change registro venta	12	change_registroventa
+47	Can delete registro venta	12	delete_registroventa
+48	Can view registro venta	12	view_registroventa
+\.
+
+
+--
+-- TOC entry 3140 (class 0 OID 16795)
+-- Dependencies: 207
+-- Data for Name: auth_user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+1	pbkdf2_sha256$150000$t6yNbahh34dt$7uwswLYoQOOWSR5SYybP99dz9yoyGHAlP6hL/WQy1/s=	2019-10-28 13:32:50.242953-06	f	ivan				f	t	2019-10-28 04:00:41.287542-06
+\.
+
+
+--
+-- TOC entry 3142 (class 0 OID 16805)
+-- Dependencies: 209
+-- Data for Name: auth_user_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3144 (class 0 OID 16813)
+-- Dependencies: 211
+-- Data for Name: auth_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3146 (class 0 OID 16873)
+-- Dependencies: 213
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+\.
+
+
+--
+-- TOC entry 3132 (class 0 OID 16759)
+-- Dependencies: 199
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	permission
+3	auth	group
+4	auth	user
+5	contenttypes	contenttype
+6	sessions	session
+7	prediccion	redneuronalresultados
+8	prediccion	registroventa
+9	prediccion	servicio
+10	prediccion_productos	producto
+11	prediccion_productos	redneuronalresultados
+12	prediccion_productos	registroventa
+\.
+
+
+--
+-- TOC entry 3130 (class 0 OID 16748)
+-- Dependencies: 197
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2019-10-28 03:56:29.016427-06
+2	auth	0001_initial	2019-10-28 03:56:29.407838-06
+3	admin	0001_initial	2019-10-28 03:56:30.276848-06
+4	admin	0002_logentry_remove_auto_add	2019-10-28 03:56:30.416097-06
+5	admin	0003_logentry_add_action_flag_choices	2019-10-28 03:56:30.430896-06
+6	contenttypes	0002_remove_content_type_name	2019-10-28 03:56:30.445274-06
+7	auth	0002_alter_permission_name_max_length	2019-10-28 03:56:30.452933-06
+8	auth	0003_alter_user_email_max_length	2019-10-28 03:56:30.46245-06
+9	auth	0004_alter_user_username_opts	2019-10-28 03:56:30.472423-06
+10	auth	0005_alter_user_last_login_null	2019-10-28 03:56:30.482066-06
+11	auth	0006_require_contenttypes_0002	2019-10-28 03:56:30.484531-06
+12	auth	0007_alter_validators_add_error_messages	2019-10-28 03:56:30.497272-06
+13	auth	0008_alter_user_username_max_length	2019-10-28 03:56:30.54582-06
+14	auth	0009_alter_user_last_name_max_length	2019-10-28 03:56:30.572523-06
+15	auth	0010_alter_group_name_max_length	2019-10-28 03:56:30.582677-06
+16	auth	0011_update_proxy_permissions	2019-10-28 03:56:30.600067-06
+17	prediccion	0001_initial	2019-10-28 03:56:30.977469-06
+18	prediccion_productos	0001_initial	2019-10-28 03:56:31.290685-06
+19	sessions	0001_initial	2019-10-28 03:56:31.407324-06
+20	prediccion	0002_auto_20191028_0358	2019-10-28 03:58:57.175763-06
+21	prediccion_productos	0002_auto_20191028_0358	2019-10-28 03:58:57.200679-06
+\.
+
+
+--
+-- TOC entry 3159 (class 0 OID 16970)
+-- Dependencies: 226
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+j1t9dshu1yzmkv7n9qt224cdv41f5929	ZWRjMjA1NTlkY2ZkZGMyMzEwYTZmMmI5NDQ4NDg3YmVlNDgwYzA1Njp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIzYTE1Y2I3MWIzMzc1NWZlNzNmYWJjMmUxYTIwZjk5MTRmYzJjZmM0In0=	2019-11-11 12:22:04.584393-06
+ckp1gh74fyxn9h8iu44cjowhq6z7u05g	ZWRjMjA1NTlkY2ZkZGMyMzEwYTZmMmI5NDQ4NDg3YmVlNDgwYzA1Njp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiIzYTE1Y2I3MWIzMzc1NWZlNzNmYWJjMmUxYTIwZjk5MTRmYzJjZmM0In0=	2019-11-11 13:32:50.251732-06
+\.
+
+
+--
+-- TOC entry 3154 (class 0 OID 16939)
+-- Dependencies: 221
+-- Data for Name: prediccion_productos_producto; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prediccion_productos_producto (id, producto) FROM stdin;
+1	KYT DE FAJA DISTRIBUCION SKF
+2	TERMO SWITCH Y OTROS
+3	ABRAADERAS 5/8*16
+4	JUEGO DE MUELLES
+5	CAJA SILICONA
+6	RODAJE DE RODILLO  3872-NSK
+7	PLATO Y DISCO EXEDY TYL 565
+8	RODAJES NACHI
+9	OIDEX PASTILLA FSA
+10	PASTILLA Y COLLARIN
+11	ENTREGA DE MANUALES DE MOF
+12	ALQUILER DE CAMIONETA
+13	ENTREGA DE MOF EN OPERACIONES
+14	REPUESTOS
+15	TEMPLAORES
+16	CALIBRACION DE ALCOLIMETRO
+17	GALONES DE AGUA
+18	ROTULAS RODAJES
+19	CRUCETAS TOYO
+20	EMPAQUE AMC
+21	RODAJE DE RODILLO
+22	ABRAZADERAS
+23	CVALEO Y EXEDY
+24	AISIN Y EXEDY
+25	CAJA DE SILICONA
+26	PLATO DE DISCO
+27	VALEO Y EXEDY
+28	CIENTO DE TUERCAS DE 1/2
+29	ENTREGABLE DE MANUAL DE USO ADECUADO DE EPP
+30	RODAJES 6308 1040
+31	CREMALLERAS HIDRAULICA
+32	PLATOS AISIN
+33	CAJAS PASTILLA
+34	HM 80314912 RODAJE
+35	BOMBAS DE FRENO
+36	ALQUILER DE CAMIONETA 
+37	LUXOMETRO
+38	CIETA DE TUERAS
+39	BATERIAS 15M 99
+40	ROLLOS DE CORTINA
+41	ESCRITORIO COMPLETO
+42	BLINDAR SUR
+43	PLATOS EMB AISIN
+44	ENTREGA MANU SIST GESTION DE SEGUIR CAPIT 1
+45	PLATOS EMI AISIN
+46	ENTERGA MANU EL USO DE EPP
+47	ROTULAS
+48	CALIBRACION DE ALCOHOLIMETRO
+49	CIENTO D TUERCAS
+50	GALONES DE AGUA ACIDULADA
+51	PLATO AISIN
+52	BOMBS DE EMBRIAGUE
+53	COLLARIN VALEO
+54	JUEGOS DE COMPUTADORA
+55	IMPRESORAS EPSON
+56	PADS FSA 7153 PD
+57	RODAJES Y BOBA DE FRENO
+58	BANNER SEGÚN FORMATO
+59	BOMBA DE GASOLINA
+60	RODAJES
+61	CIENTOS DE TUERCAS
+62	BATERIAS DE 13 PLACAS
+63	GALONES DE AGUA LICUADA
+64	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+65	ZAPATOS CLUTER P/A TALLA 40-41
+66	FILTROS DE MUESTREO DE POLVO 3M
+67	MANUAL DE MANEJO DE APILADORES
+68	CANDADO LOCK OUT CON TARJETA
+69	MAMELUCOS TELA DRILL TALLA M- COLOR NARANJA
+70	EQUIPO ESTRESTERMICO - MARCA STRESPOSCH - M45 SERIAL N° MS 4562B
+71	CAMILLA DE PINES (EMERGENCIA)
+72	FILTROS DE GASES VOLATILES 3M
+73	CARPETAS UNIPERSONALES
+74	CABALLETE DE 3M X 1.20
+75	ARNES DE SEGURIDAD DE TRES ANILLOS
+76	FILTROS DE COVS / MSA
+77	ENTREGABLE COPIAS DE PROCEDIMIENTOS Y ESTANDARES 2019-MINA RAURA
+78	BOMBA DE SUCCION DE POLVOS
+79	TRIPODES DE SOPORTE DE EQUIPO - MARCA TRITON
+80	MEDIDOR DE COVS STELL - 358
+81	LUXOMETRO MARCA EXTECH SERIE X9140 CALIBRADO/02 SENSORES
+82	MANUALES DE MAEJO DEFENSIVO
+83	SONOMETRO MARCA EXTECH SERIE X9140 CALIBRADO/02SENSORES
+84	SONOMETRO MARCA EXTECH SERIE X9140 CALIBRADO/ 02SENSORES
+85	MANUALES DE MANEJO DEFENSIVO
+86	TRIPODES DE SOPORTE DE EQUIPO-MARCA TRITON
+87	CHALECOS CON LOGO SEGÚN INDICACION
+88	EXTINTOR CO2-10 LB - MARCA LANVICK
+89	ZAPATOS CLUTER P/A TALLA 40-41-
+90	PALICEROS PROMOCIONALES
+91	ZAPATOS CLUTER P/A TALLA 40-37-41
+92	FILTROS DE MUESTREO POLVO 3M
+\.
+
+
+--
+-- TOC entry 3156 (class 0 OID 16950)
+-- Dependencies: 223
+-- Data for Name: prediccion_productos_redneuronalresultados; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prediccion_productos_redneuronalresultados (id, clasificacion, periodo, dam, pema, rmse, look_back, neuronas, epocas, eval_dir, pred_dir, dam_dir, pema_dir, rmse_dir) FROM stdin;
+1	PRODUCTOS	DIAS	38.9824638366699219	0.0710505843162536621	59.1666203601638045	60	128	200	PRODUCTOS_DIAS_evaluacion.png	PRODUCTOS_DIAS_prediccion.png	PRODUCTOS_DIAS_dam.png	PRODUCTOS_DIAS_pema.png	PRODUCTOS_DIAS_rmse.png
+2	PRODUCTOS	SEMANAS	72.6352615356445312	0.0375398546457290649	90.9579820147055642	8	256	2000	PRODUCTOS_SEMANAS_evaluacion.png	PRODUCTOS_SEMANAS_prediccion.png	PRODUCTOS_SEMANAS_dam.png	PRODUCTOS_SEMANAS_pema.png	PRODUCTOS_SEMANAS_rmse.png
+3	PRODUCTOS	MESES	102.65185546875	0.0115247918292880058	117.808168852747642	6	128	2000	PRODUCTOS_MESES_evaluacion.png	PRODUCTOS_MESES_prediccion.png	PRODUCTOS_MESES_dam.png	PRODUCTOS_MESES_pema.png	PRODUCTOS_MESES_rmse.png
+\.
+
+
+--
+-- TOC entry 3158 (class 0 OID 16961)
+-- Dependencies: 225
+-- Data for Name: prediccion_productos_registroventa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prediccion_productos_registroventa (id, fecha, empresa, ruc, precio, tipo) FROM stdin;
+1	2018-01-03	SERMIMIN SAC	20535886114	1633.21439999999984	KYT DE FAJA DISTRIBUCION SKF
+2	2018-01-15	SERMIMIN SAC	20535886114	1407.65740000000005	TERMO SWITCH Y OTROS
+3	2018-01-17	CETECMIN	0001-001125	1532.10020000000009	ABRAADERAS 5/8*16
+4	2018-01-26	SERMIMIN SAC	20535886114	1742.32899999999995	JUEGO DE MUELLES
+5	2018-01-30	CETECMIN	0001-001125	1585.15299999999979	CAJA SILICONA
+6	2018-02-01	SERMIMIN	20535886114	105.30319999999999	RODAJE DE RODILLO  3872-NSK
+7	2018-02-06	CETECMIN	20549065873	1020.49940000000004	PLATO Y DISCO EXEDY TYL 565
+8	2018-02-09	CONSULTING	205630569291	312.49939999999998	RODAJES NACHI
+9	2018-02-19	PRERIESG	20600467329	1394.54759999999987	OIDEX PASTILLA FSA
+10	2018-02-23	CETECMIN	20549065873	1124.95299999999997	PASTILLA Y COLLARIN
+11	2018-03-01	TELEMARKETING LAL	20602374751	5500	ENTREGA DE MANUALES DE MOF
+12	2018-03-05	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+13	2018-03-06	TELEMARKETING LAL	20602374751	5500.00360000000001	ENTREGA DE MOF EN OPERACIONES
+14	2018-03-07	SERMIMIN	20535886114	2073.49600000000009	REPUESTOS
+15	2018-03-08	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+16	2018-03-09	SERMIMIN	20602374751	1808.9989999999998	REPUESTOS
+17	2018-03-10	TELEMARKETING LAL	20602374751	1334.0018	TEMPLAORES
+18	2018-03-12	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+19	2018-03-15	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+20	2018-03-16	SERMIMIN	20535886114	2101.4974000000002	REPUESTOS
+21	2018-03-17	SERMIMIN	20602374751	3747.5029999999997	REPUESTOS
+22	2018-03-19	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+23	2018-03-22	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+24	2018-03-24	TELEMARKETING LAL	20602374751	699.999599999999987	ALQUILER DE CAMIONETA
+25	2018-03-26	SERMIMIN	20602374751	2790.40499999999975	REPUESTOS
+26	2018-03-28	SERMIMIN	20602374751	4017.94720000000007	REPUESTOS
+27	2018-04-26	SCHARFF LOGISTICA INTEGRADA	20463958590	330.399999999999977	CALIBRACION DE ALCOLIMETRO
+28	2018-04-28	PRERIESG	20523347137	1698.01999999999998	GALONES DE AGUA
+29	2018-04-29	PRERIESG	20523347137	1465.0172	ROTULAS RODAJES
+30	2018-04-30	CETECMIN SAC	20549065873	536.357200000000034	CRUCETAS TOYO
+31	2018-05-03	CEMSO	20551840205	690.590000000000032	EMPAQUE AMC
+32	2018-05-07	CETECMIN SAC	20549065873	1705.04999999999995	RODAJE DE RODILLO
+33	2018-05-08	CEMSO	20551840205	747.950000000000045	ABRAZADERAS
+34	2018-05-11	CONSULTING	20563056291	1145.00120000000015	CVALEO Y EXEDY
+35	2018-05-16	CETECMIN SAC	20549065873	1466.10280000000012	AISIN Y EXEDY
+36	2018-05-22	CEMSO	20551840205	1023.14260000000002	CAJA DE SILICONA
+37	2018-05-24	CETECMIN SAC	20549065873	979.399999999999977	PLATO DE DISCO
+38	2018-05-26	CETECMIN SAC	20549065873	1610.5465999999999	VALEO Y EXEDY
+39	2018-06-04	CEMSO	20551840205	690.590000000000032	EMPAQUE AMC
+40	2018-06-07	CETECMIN SAC	20549065873	1260.08999999999992	RODAJE DE RODILLO
+41	2018-06-08	CEMSO	20551840205	747.950000000000045	ABRAZADERAS
+42	2018-06-10	CONSULTING	20563056291	590	CVALEO Y EXEDY
+43	2018-06-16	CETECMIN SAC	20549065873	1466.10280000000012	AISIN Y EXEDY
+44	2018-06-20	CEMSO	20551840205	1023.14260000000002	CAJA DE SILICONA
+45	2018-06-24	CETECMIN SAC	20549065873	590	PLATO DE DISCO
+46	2018-06-26	CETECMIN SAC	20549065873	1062	VALEO Y EXEDY
+47	2018-07-02	SERMIMIN	20535886114	1750.78960000000006	CIENTO DE TUERCAS DE 1/2
+48	2018-07-04	TELEMARKETING LAL SAC	20602374751	3499.99799999999959	ENTREGABLE DE MANUAL DE USO ADECUADO DE EPP
+49	2018-07-05	LAUR LILIANA GR	10727868521	2680.00419999999986	RODAJES 6308 1040
+50	2018-07-10	LAUR LILIANA GR	10727868521	2916.3463999999999	CREMALLERAS HIDRAULICA
+51	2018-07-13	SERMIMIN	20535886114	1673.99520000000007	PLATOS AISIN
+52	2018-07-19	CETECMIN SAC	20549065873	3062.25340000000006	CAJAS PASTILLA
+53	2018-07-25	CETECMIN SAC	20549065873	2810.40599999999995	HM 80314912 RODAJE
+54	2018-07-26	SERMIMIN	20535886114	1980.61819999999989	BOMBAS DE FRENO
+55	2018-07-27	TELEMARKETING LAL SAC	20602374751	650.003000000000043	ALQUILER DE CAMIONETA 
+56	2018-07-30	TELEMARKETING LAL SAC	20602374751	650.003000000000043	ALQUILER DE CAMIONETA 
+57	2018-07-31	TELEMARKETING LAL SAC	20602374751	3405.64519999999993	LUXOMETRO
+58	2018-08-03	SERMIMIN SAC	20535886114	1493.31359999999995	CIETA DE TUERAS
+59	2018-08-09	PRERIESG	20600467329	1130.49900000000002	BATERIAS 15M 99
+60	2018-08-10	SERMIMIN SAC	20535886114	2019.74700000000007	ROLLOS DE CORTINA
+61	2018-08-16	SERMIMIN SAC	20535886114	3003.5956000000001	ESCRITORIO COMPLETO
+62	2018-08-20	PRERIESG	20600467329	2734.1543999999999	BLINDAR SUR
+63	2018-08-24	PRERIESG	20600467329	2874.49180000000024	PLATOS EMB AISIN
+64	2018-09-03	SERMIMIN SAC	20535886114	1493.31359999999995	CIETA DE TUERAS
+65	2018-09-06	TELEMARKETING LAL SAC	20602374751	1770	ENTREGA MANU SIST GESTION DE SEGUIR CAPIT 1
+67	2018-01-03	SERMIMIN SAC	20535886114	1633.21439999999984	KYT DE FAJA DISTRIBUCION SKF
+68	2018-01-15	SERMIMIN SAC	20535886114	1407.65740000000005	TERMO SWITCH Y OTROS
+69	2018-01-17	CETECMIN	0001-001125	1532.10020000000009	ABRAADERAS 5/8*16
+70	2018-01-26	SERMIMIN SAC	20535886114	1742.32899999999995	JUEGO DE MUELLES
+71	2018-01-30	CETECMIN	0001-001125	1585.15299999999979	CAJA SILICONA
+72	2018-02-01	SERMIMIN	20535886114	105.30319999999999	RODAJE DE RODILLO  3872-NSK
+73	2018-02-06	CETECMIN	20549065873	1020.49940000000004	PLATO Y DISCO EXEDY TYL 565
+74	2018-02-09	CONSULTING	205630569291	312.49939999999998	RODAJES NACHI
+75	2018-02-19	PRERIESG	20600467329	1394.54759999999987	OIDEX PASTILLA FSA
+76	2018-02-23	CETECMIN	20549065873	1124.95299999999997	PASTILLA Y COLLARIN
+77	2018-03-01	TELEMARKETING LAL	20602374751	5500	ENTREGA DE MANUALES DE MOF
+78	2018-03-05	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+79	2018-03-06	TELEMARKETING LAL	20602374751	5500.00360000000001	ENTREGA DE MOF EN OPERACIONES
+80	2018-03-07	SERMIMIN	20535886114	2073.49600000000009	REPUESTOS
+81	2018-03-08	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+82	2018-03-09	SERMIMIN	20602374751	1808.9989999999998	REPUESTOS
+83	2018-03-10	TELEMARKETING LAL	20602374751	1334.0018	TEMPLAORES
+84	2018-03-12	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+85	2018-03-15	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+86	2018-03-16	SERMIMIN	20535886114	2101.4974000000002	REPUESTOS
+87	2018-03-17	SERMIMIN	20602374751	3747.5029999999997	REPUESTOS
+88	2018-03-19	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+89	2018-03-22	TELEMARKETING LAL	20602374751	650.003000000000043	ALQUILER DE CAMIONETA
+90	2018-03-24	TELEMARKETING LAL	20602374751	699.999599999999987	ALQUILER DE CAMIONETA
+91	2018-03-26	SERMIMIN	20602374751	2790.40499999999975	REPUESTOS
+92	2018-03-28	SERMIMIN	20602374751	4017.94720000000007	REPUESTOS
+93	2018-04-26	SCHARFF LOGISTICA INTEGRADA	20463958590	330.399999999999977	CALIBRACION DE ALCOLIMETRO
+94	2018-04-28	PRERIESG	20523347137	1698.01999999999998	GALONES DE AGUA
+95	2018-04-29	PRERIESG	20523347137	1465.0172	ROTULAS RODAJES
+96	2018-04-30	CETECMIN SAC	20549065873	536.357200000000034	CRUCETAS TOYO
+97	2018-05-03	CEMSO	20551840205	690.590000000000032	EMPAQUE AMC
+98	2018-05-07	CETECMIN SAC	20549065873	1705.04999999999995	RODAJE DE RODILLO
+99	2018-05-08	CEMSO	20551840205	747.950000000000045	ABRAZADERAS
+100	2018-05-11	CONSULTING	20563056291	1145.00120000000015	CVALEO Y EXEDY
+101	2018-05-16	CETECMIN SAC	20549065873	1466.10280000000012	AISIN Y EXEDY
+102	2018-05-22	CEMSO	20551840205	1023.14260000000002	CAJA DE SILICONA
+103	2018-05-24	CETECMIN SAC	20549065873	979.399999999999977	PLATO DE DISCO
+104	2018-05-26	CETECMIN SAC	20549065873	1610.5465999999999	VALEO Y EXEDY
+105	2018-06-04	CEMSO	20551840205	690.590000000000032	EMPAQUE AMC
+106	2018-06-07	CETECMIN SAC	20549065873	1260.08999999999992	RODAJE DE RODILLO
+107	2018-06-08	CEMSO	20551840205	747.950000000000045	ABRAZADERAS
+108	2018-06-10	CONSULTING	20563056291	590	CVALEO Y EXEDY
+109	2018-06-16	CETECMIN SAC	20549065873	1466.10280000000012	AISIN Y EXEDY
+110	2018-06-20	CEMSO	20551840205	1023.14260000000002	CAJA DE SILICONA
+111	2018-06-24	CETECMIN SAC	20549065873	590	PLATO DE DISCO
+112	2018-06-26	CETECMIN SAC	20549065873	1062	VALEO Y EXEDY
+113	2018-07-02	SERMIMIN	20535886114	1750.78960000000006	CIENTO DE TUERCAS DE 1/2
+114	2018-07-04	TELEMARKETING LAL SAC	20602374751	3499.99799999999959	ENTREGABLE DE MANUAL DE USO ADECUADO DE EPP
+115	2018-07-05	LAUR LILIANA GR	10727868521	2680.00419999999986	RODAJES 6308 1040
+116	2018-07-10	LAUR LILIANA GR	10727868521	2916.3463999999999	CREMALLERAS HIDRAULICA
+117	2018-07-13	SERMIMIN	20535886114	1673.99520000000007	PLATOS AISIN
+118	2018-07-19	CETECMIN SAC	20549065873	3062.25340000000006	CAJAS PASTILLA
+119	2018-07-25	CETECMIN SAC	20549065873	2810.40599999999995	HM 80314912 RODAJE
+120	2018-07-26	SERMIMIN	20535886114	1980.61819999999989	BOMBAS DE FRENO
+121	2018-07-27	TELEMARKETING LAL SAC	20602374751	650.003000000000043	ALQUILER DE CAMIONETA 
+122	2018-07-30	TELEMARKETING LAL SAC	20602374751	650.003000000000043	ALQUILER DE CAMIONETA 
+123	2018-07-31	TELEMARKETING LAL SAC	20602374751	3405.64519999999993	LUXOMETRO
+124	2018-08-03	SERMIMIN SAC	20535886114	1493.31359999999995	CIETA DE TUERAS
+125	2018-08-09	PRERIESG	20600467329	1130.49900000000002	BATERIAS 15M 99
+126	2018-08-10	SERMIMIN SAC	20535886114	2019.74700000000007	ROLLOS DE CORTINA
+127	2018-08-16	SERMIMIN SAC	20535886114	3003.5956000000001	ESCRITORIO COMPLETO
+128	2018-08-20	PRERIESG	20600467329	2734.1543999999999	BLINDAR SUR
+129	2018-08-24	PRERIESG	20600467329	2874.49180000000024	PLATOS EMB AISIN
+130	2018-09-03	SERMIMIN SAC	20535886114	1493.31359999999995	CIETA DE TUERAS
+131	2018-09-06	TELEMARKETING LAL SAC	20602374751	1770	ENTREGA MANU SIST GESTION DE SEGUIR CAPIT 1
+132	2018-09-10	\N	\N	0	\N
+133	2018-09-14	SERMIMIN SAC	20535886114	1673.99520000000007	PLATOS EMI AISIN
+134	2018-09-18	\N	\N	0	\N
+135	2018-09-20	TELEMARKETING LAL SAC	20602374751	1652	ENTERGA MANU EL USO DE EPP
+136	2018-09-21	PRERIESG	20600467329	1888	BLINDAR SUR
+137	2018-09-22	PRERIESG	20600467329	2874.49180000000024	PLATOS EMB AISIN
+138	2018-10-01	SERMIMIN SAC	20535886114	1180	CIETA DE TUERAS
+139	2018-10-05	TELEMARKETING LAL SAC	20602374751	1180	ENTREGA MANU SIST GESTION DE SEGUIR CAPIT 1
+140	2018-10-10	PRERIESG	20600467329	1130.49900000000002	BATERIAS 15M 99
+141	2018-10-11	SERMIMIN SAC	20535886114	2019.74700000000007	ROLLOS DE CORTINA
+142	2018-10-12	PRERIESG	20600467329	1424.49600000000009	ROTULAS
+143	2018-10-15	SERMIMIN SAC	20535886114	4130	ESCRITORIO COMPLETO
+144	2018-10-23	TELEMARKETING LAL SAC	20602374751	1770	ENTERGA MANU EL USO DE EPP
+145	2018-11-15	SCHARFF INTEGRADA COURIER	20110964928	206.5	CALIBRACION DE ALCOHOLIMETRO
+146	2018-11-17	CEMSO	20551840205	995.54239999999993	CIENTO D TUERCAS
+147	2018-11-19	CETECMIN	20549065873	2215.43820000000005	GALONES DE AGUA ACIDULADA
+148	2018-11-20	SERMIMIN	20535886114	1673.99520000000007	PLATO AISIN
+149	2018-11-21	CEMSO	20551840205	2916.1576	ESCRITORIO COMPLETO
+150	2018-11-22	SERMIMIN	20535886114	978.975199999999973	BOMBS DE EMBRIAGUE
+151	2018-11-24	CETECMIN	20549065873	2813.24980000000005	COLLARIN VALEO
+152	2018-11-26	CEMSO	20551840205	1908.49659999999994	ROLLOS DE CORTINA
+153	2018-11-27	SERMIMIN	20535886114	2400.00199999999995	JUEGOS DE COMPUTADORA
+154	2018-11-28	SERMIMIN	20535886114	1599.99739999999997	IMPRESORAS EPSON
+155	2018-11-29	CETECMIN	20549065873	1569.60059999999999	PADS FSA 7153 PD
+156	2018-11-30	SERMIMIN	20535886114	1675.74159999999983	RODAJES Y BOBA DE FRENO
+157	2018-12-17	CJNETCOM	20518224477	401.199999999999989	BANNER SEGÚN FORMATO
+158	2018-12-19	CERTILAB	20600740408	344.878600000000006	BOMBA DE GASOLINA
+159	2018-12-21	ITSSMA	20545472342	1700.00240000000008	RODAJES
+160	2018-12-24	NUÑEZ DEL PILAR	10468078771	2577.93420000000015	CIENTOS DE TUERCAS
+161	2018-12-25	SERMIMIN	20535886114	1407.50399999999991	BATERIAS DE 13 PLACAS
+162	2018-12-27	NUÑEZ DEL PILAR	10468078771	1434.83280000000013	GALONES DE AGUA LICUADA
+163	2019-01-05	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	2360	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+164	2019-01-26	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	944	ZAPATOS CLUTER P/A TALLA 40-41
+165	2019-02-05	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	2390.70359999999982	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+166	2019-02-26	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	704.424600000000055	ZAPATOS CLUTER P/A TALLA 40-41
+167	2019-03-01	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	639.996599999999944	FILTROS DE MUESTREO DE POLVO 3M
+168	2019-03-05	CENTRO TECNOLOGICO MINERO INDUSTRIAL S.A.C	20549065873	1588.35079999999994	MANUAL DE MANEJO DE APILADORES
+169	2019-03-07	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	1795.00420000000008	CANDADO LOCK OUT CON TARJETA
+170	2019-03-12	CENTRO TECNOLOGICO MINERO INDUSTRIAL S.A.C	20549065873	2401.20560000000023	MAMELUCOS TELA DRILL TALLA M- COLOR NARANJA
+171	2019-03-18	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	2503.00419999999986	EQUIPO ESTRESTERMICO - MARCA STRESPOSCH - M45 SERIAL N° MS 4562B
+172	2019-03-20	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2400.00199999999995	CAMILLA DE PINES (EMERGENCIA)
+173	2019-03-29	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2348.95520000000033	FILTROS DE GASES VOLATILES 3M
+174	2019-04-02	SERVICIOS MINEROS MECANICOS MINDUSTRIALES S.A.C	20535886114	2400.00199999999995	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+175	2019-04-05	CENTRO TECNOLOGICO MINERO INDUSTRIAL S.A.C	20549065873	1554.00099999999998	CARPETAS UNIPERSONALES
+176	2019-04-09	PREVENCION EN RIESGOS GLABALES S.AC	20600467329	1587.39499999999998	CABALLETE DE 3M X 1.20
+177	2019-04-15	CENTRO TECNOLOGICO MINERO INDUSTRIAL S.A.C	20549065873	2550.34580000000005	ARNES DE SEGURIDAD DE TRES ANILLOS
+178	2019-04-20	SERVICIOS MINEROS MECANICOS MINDUSTRIALES S.A.C	20535886114	2059.99679999999989	FILTROS DE COVS / MSA
+179	2019-04-25	CJ NETCOM S.AC.	20518224477	349.574999999999989	ENTREGABLE COPIAS DE PROCEDIMIENTOS Y ESTANDARES 2019-MINA RAURA
+180	2019-04-26	PREVENCION EN RIESGOS GLABALES S.AC	20600467329	2600.00019999999995	BOMBA DE SUCCION DE POLVOS
+181	2019-04-29	SERVICIOS MINEROS MECANICOS MINDUSTRIALES S.A.C	20535886114	1539.99439999999981	TRIPODES DE SOPORTE DE EQUIPO - MARCA TRITON
+182	2019-04-30	PREVENCION EN RIESGOS GLABALES S.AC	20600467329	2499.99519999999984	MEDIDOR DE COVS STELL - 358
+183	2019-05-07	SERVICIOS MINEROS MECANICOS INDUTRIALES S.A.C	20535886114	2451.23760000000038	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+184	2019-05-14	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	1288.39999999999986	FILTROS DE GASES VOLATILES 3M
+185	2019-05-16	SERVICIOS MINEROS MECANICOS INDUTRIALES S.A.C	20535886114	2045.40020000000004	FILTROS DE MUESTREO DE POLVO 3M
+186	2019-05-22	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2851.36379999999963	LUXOMETRO MARCA EXTECH SERIE X9140 CALIBRADO/02 SENSORES
+187	2019-05-28	SERVICIOS MINEROS MECANICOS INDUTRIALES S.A.C	20535886114	1363.59619999999995	FILTROS DE MUESTREO DE POLVO 3M
+188	2019-06-07	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	1539.99439999999981	TRIPODES DE SOPORTE DE EQUIPO - MARCA TRITON
+189	2019-06-13	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	1164.12899999999991	MANUALES DE MAEJO DEFENSIVO
+190	2019-06-19	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	2559.99819999999954	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+191	2019-07-04	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2499.99519999999984	BOMBA DE SUCCION DE POLVOS
+192	2019-07-17	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	1500.00420000000008	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+193	2019-07-25	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2499.99519999999984	SONOMETRO MARCA EXTECH SERIE X9140 CALIBRADO/02SENSORES
+194	2019-07-31	ANA VICTORIA GUTIERREZ RIVERA	10727868564	1017.79719999999998	CANDADO LOCK OUT CON TARJETA
+195	2019-08-06	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	2504.65620000000035	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+196	2019-08-09	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2499.99519999999984	BOMBA DE SUCCION DE POLVOS
+197	2019-08-14	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	1539.00320000000011	TRIPODES DE SOPORTE DE EQUIPO - MARCA TRITON
+198	2019-08-20	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2495.99499999999989	SONOMETRO MARCA EXTECH SERIE X9140 CALIBRADO/ 02SENSORES
+199	2019-08-21	SERVICIOS MINEROS MECANICOS INDUSTRIALES S.A.C	20535886114	1956.3456000000001	FILTROS DE COVS / MSA
+200	2019-08-26	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2425.99739999999974	MANUALES DE MANEJO DEFENSIVO
+201	2019-08-28	PREVENCION EN RIESGOS GLOBALES S.A.C	20600467329	2578.00500000000011	FILTROS DE GASES VOLATILES 3M
+202	2019-09-04	SERVICIOS MINEROS MECANICOS INDUSTRIALES 	20535886114	2620.20180000000028	TRIPODES DE SOPORTE DE EQUIPO-MARCA TRITON
+203	2019-09-09	INSTITUTO TECNICO DE SEGURIDAD SALUD Y MEDIO AMBIENTE	20545472342	907.585199999999986	CHALECOS CON LOGO SEGÚN INDICACION
+204	2019-09-17	CENTRO MEDICO DE SALUD OCUPACIONAL S.A.C	20551840205	2322.81820000000016	EXTINTOR CO2-10 LB - MARCA LANVICK
+205	2019-09-18	SERVICIOS MINEROS MECANICOS INDUSTRIALES 	20535886114	2215.20219999999972	ZAPATOS CLUTER P/A TALLA 40-41-
+206	2019-09-20	INSTITUTO TECNICO DE SEGURIDAD SALUD Y MEDIO AMBIENTE	20545472342	500.00139999999999	PALICEROS PROMOCIONALES
+207	2019-09-23	CERTIFICATION & LABORATORIE S.A.C	20600740408	2303.70219999999972	ZAPATOS CLUTER P/A TALLA 40-37-41
+208	2019-09-25	CENTRO MEDICO DE SALUD OCUPACIONAL S.A.C	20551840205	2229.9993999999997	FILTROS DE MUESTREO POLVO 3M
+209	2019-09-27	SERVICIOS MINEROS MECANICOS INDUSTRIALES 	20535886114	2700.5007999999998	FILTROS DE COVS / MSA
+210	2019-09-30	SERVICIOS MINEROS MECANICOS INDUSTRIALES 	20535886114	2464.09959999999955	SOPORTE PROVISIONAL DE MEDIDOR DE COVS
+\.
+
+
+--
+-- TOC entry 3148 (class 0 OID 16906)
+-- Dependencies: 215
+-- Data for Name: prediccion_redneuronalresultados; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prediccion_redneuronalresultados (id, clasificacion, periodo, dam, pema, rmse, look_back, neuronas, epocas, eval_dir, pred_dir, dam_dir, pema_dir, rmse_dir) FROM stdin;
+1	GENERAL	DIAS	80.2632827758789062	0.142965003848075867	197.392692367270769	60	128	2000	VENTAS_DIAS_evaluacion.png	VENTAS_DIAS_prediccion.png	VENTAS_DIAS_dam.png	VENTAS_DIAS_pema.png	VENTAS_DIAS_rmse.png
+2	GENERAL	SEMANAS	473.664398193359375	0.151536166667938232	689.211528668811525	8	128	2000	VENTAS_SEMANAS_evaluacion.png	VENTAS_SEMANAS_prediccion.png	VENTAS_SEMANAS_dam.png	VENTAS_SEMANAS_pema.png	VENTAS_SEMANAS_rmse.png
+3	GENERAL	MESES	523.808349609375	0.0656853169202804565	642.934386232374436	6	128	2000	VENTAS_MESES_evaluacion.png	VENTAS_MESES_prediccion.png	VENTAS_MESES_dam.png	VENTAS_MESES_pema.png	VENTAS_MESES_rmse.png
+4	IPER Y MAPA DE RIESGOS	DIAS	40.6049346923828125	0.233972877264022827	59.6096371226215851	60	128	2000	IPER Y MAPA DE RIESGOS_DIAS_evaluacion.png	IPER Y MAPA DE RIESGOS_DIAS_prediccion.png	IPER Y MAPA DE RIESGOS_DIAS_dam.png	IPER Y MAPA DE RIESGOS_DIAS_pema.png	IPER Y MAPA DE RIESGOS_DIAS_rmse.png
+5	IPER Y MAPA DE RIESGOS	SEMANAS	157.791000366210938	0.225618362426757812	185.465577584494099	8	128	2000	IPER Y MAPA DE RIESGOS_SEMANAS_evaluacion.png	IPER Y MAPA DE RIESGOS_SEMANAS_prediccion.png	IPER Y MAPA DE RIESGOS_SEMANAS_dam.png	IPER Y MAPA DE RIESGOS_SEMANAS_pema.png	IPER Y MAPA DE RIESGOS_SEMANAS_rmse.png
+6	IPER Y MAPA DE RIESGOS	MESES	1.52587890625e-05	4.53725519378167519e-08	2.15791864375777458e-05	3	128	1000	IPER Y MAPA DE RIESGOS_MESES_evaluacion.png	IPER Y MAPA DE RIESGOS_MESES_prediccion.png	IPER Y MAPA DE RIESGOS_MESES_dam.png	IPER Y MAPA DE RIESGOS_MESES_pema.png	IPER Y MAPA DE RIESGOS_MESES_rmse.png
+7	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 	DIAS	180.564834594726562	1.703560471534729	237.944436134783359	30	128	100	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _DIAS_evaluacion.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _DIAS_prediccion.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _DIAS_dam.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _DIAS_pema.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _DIAS_rmse.png
+8	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 	SEMANAS	123.895149230957031	0.146432489156723022	423.734900173445681	3	128	10000	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _SEMANAS_evaluacion.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _SEMANAS_prediccion.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _SEMANAS_dam.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _SEMANAS_pema.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _SEMANAS_rmse.png
+9	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 	MESES	112.562751770019531	0.0539838299155235291	154.634713215532571	3	128	1000	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _MESES_evaluacion.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _MESES_prediccion.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _MESES_dam.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _MESES_pema.png	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN _MESES_rmse.png
+10	CAPACITACION	DIAS	74.4053726196289062	0.341412872076034546	694.812856998199209	30	128	2000	CAPACITACION_DIAS_evaluacion.png	CAPACITACION_DIAS_prediccion.png	CAPACITACION_DIAS_dam.png	CAPACITACION_DIAS_pema.png	CAPACITACION_DIAS_rmse.png
+11	CAPACITACION	SEMANAS	223.558380126953125	0.186562508344650269	930.335087481924461	10	128	2000	CAPACITACION_SEMANAS_evaluacion.png	CAPACITACION_SEMANAS_prediccion.png	CAPACITACION_SEMANAS_dam.png	CAPACITACION_SEMANAS_pema.png	CAPACITACION_SEMANAS_rmse.png
+12	CAPACITACION	MESES	0.000248178839683532715	8.84461570649364148e-08	0.000323253370547839445	8	128	2000	CAPACITACION_MESES_evaluacion.png	CAPACITACION_MESES_prediccion.png	CAPACITACION_MESES_dam.png	CAPACITACION_MESES_pema.png	CAPACITACION_MESES_rmse.png
+13	MONITOREO DE HIGIENE OCUPACIONAL	DIAS	134.9083251953125	0.298240333795547485	507.262413598721139	60	128	1000	MONITOREO DE HIGIENE OCUPACIONAL_DIAS_evaluacion.png	MONITOREO DE HIGIENE OCUPACIONAL_DIAS_prediccion.png	MONITOREO DE HIGIENE OCUPACIONAL_DIAS_dam.png	MONITOREO DE HIGIENE OCUPACIONAL_DIAS_pema.png	MONITOREO DE HIGIENE OCUPACIONAL_DIAS_rmse.png
+14	MONITOREO DE HIGIENE OCUPACIONAL	SEMANAS	2086.002197265625	0.554868102073669434	3527.74885727428182	4	128	2000	MONITOREO DE HIGIENE OCUPACIONAL_SEMANAS_evaluacion.png	MONITOREO DE HIGIENE OCUPACIONAL_SEMANAS_prediccion.png	MONITOREO DE HIGIENE OCUPACIONAL_SEMANAS_dam.png	MONITOREO DE HIGIENE OCUPACIONAL_SEMANAS_pema.png	MONITOREO DE HIGIENE OCUPACIONAL_SEMANAS_rmse.png
+15	MONITOREO DE HIGIENE OCUPACIONAL	MESES	300.833160400390625	0.0573831498622894287	444.567556733507047	3	128	10000	MONITOREO DE HIGIENE OCUPACIONAL_MESES_evaluacion.png	MONITOREO DE HIGIENE OCUPACIONAL_MESES_prediccion.png	MONITOREO DE HIGIENE OCUPACIONAL_MESES_dam.png	MONITOREO DE HIGIENE OCUPACIONAL_MESES_pema.png	MONITOREO DE HIGIENE OCUPACIONAL_MESES_rmse.png
+16	AUDITORIA	DIAS	57.9008407592773438	0.588350176811218262	347.660832834962889	60	128	1500	AUDITORIA_DIAS_evaluacion.png	AUDITORIA_DIAS_prediccion.png	AUDITORIA_DIAS_dam.png	AUDITORIA_DIAS_pema.png	AUDITORIA_DIAS_rmse.png
+17	AUDITORIA	SEMANAS	323.521575927734375	0.456946611404418945	868.334864841899616	8	128	5000	AUDITORIA_SEMANAS_evaluacion.png	AUDITORIA_SEMANAS_prediccion.png	AUDITORIA_SEMANAS_dam.png	AUDITORIA_SEMANAS_pema.png	AUDITORIA_SEMANAS_rmse.png
+18	AUDITORIA	MESES	162.722763061523438	0.118904590606689453	438.584156690594568	8	256	10000	AUDITORIA_MESES_evaluacion.png	AUDITORIA_MESES_prediccion.png	AUDITORIA_MESES_dam.png	AUDITORIA_MESES_pema.png	AUDITORIA_MESES_rmse.png
+\.
+
+
+--
+-- TOC entry 3150 (class 0 OID 16917)
+-- Dependencies: 217
+-- Data for Name: prediccion_registroventa; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prediccion_registroventa (id, fecha, empresa, ruc, precio, tipo) FROM stdin;
+1	2015-01-15	ICATOM  SA	20310422755	11797	AUDITORIA
+2	2015-01-18	CJJ NETCOM	20518224447	1770	AUDITORIA
+3	2015-03-11	ITACOM  SA	20310422755	5199	MONITOREO DE HIGIENE OCUPACIONAL
+4	2015-03-20	GEOTEC	20100135669	672	MONITOREO DE HIGIENE OCUPACIONAL
+5	2015-03-31	SODEXO PERU SAC	20414766308	5557	MONITOREO DE HIGIENE OCUPACIONAL
+6	2015-04-11	ITACOM  SA	20310422755	5199	MONITOREO DE HIGIENE OCUPACIONAL
+7	2015-04-12	SODEXO SAC	20414766308	1500	MONITOREO DE HIGIENE OCUPACIONAL
+8	2015-04-13	GEOTEC	20100135669	1600	MONITOREO DE HIGIENE OCUPACIONAL
+9	2015-06-18	SEGURITY SIGNS  SYTEMS PERU	20507858156	2360	MONITOREO DE HIGIENE OCUPACIONAL
+10	2015-07-31	SODEXO PERU SAC	20414766308	5723	MONITOREO DE HIGIENE OCUPACIONAL
+11	2015-08-25	APC CORPORATION	2010218563	5076	MONITOREO DE HIGIENE OCUPACIONAL
+12	2015-09-02	SICCSA	20110964928	4150	MONITOREO DE HIGIENE OCUPACIONAL
+13	2015-09-05	GEOTEC	20100135699	14058	MONITOREO DE HIGIENE OCUPACIONAL
+14	2015-09-07	ICATOM  SA	20310422755	4720	AUDITORIA
+15	2015-09-08	SODEXO PERU SAC	20414766308	6596	MONITOREO DE HIGIENE OCUPACIONAL
+16	2015-10-29	BOART CONCLEAR SAC	20257364608	13407	MONITOREO DE HIGIENE OCUPACIONAL
+17	2015-11-20	ICATOM 	20310422755	5075	MONITOREO DE HIGIENE OCUPACIONAL
+18	2015-11-24	KIEHNE NAGEL 	20347845150	2171	MONITOREO DE HIGIENE OCUPACIONAL
+19	2015-11-25	SODEXO PERU SAC	20414766308	8236	MONITOREO DE HIGIENE OCUPACIONAL
+20	2015-12-04	SODEXO PERU SAC	20414766308	4141	AUDITORIA
+21	2015-12-07	GEOTEC	20100135699	21940	MONITOREO DE HIGIENE OCUPACIONAL
+22	2016-01-22	KIEHNE NAGEL 	20347845150	6254	AUDITORIA
+23	2016-03-22	BOART LONGYEAR SAC	20257364608	5000	AUDITORIA
+24	2016-03-22	KIEHNE NAGEL 	20347845150	6714	MONITOREO DE HIGIENE OCUPACIONAL
+25	2016-04-21	SODEXO PERU SAC	20414766308	10738	MONITOREO DE HIGIENE OCUPACIONAL
+26	2016-04-22	SODEXO PERU SAC	20414766308	2088	MONITOREO DE HIGIENE OCUPACIONAL
+27	2016-05-05	CJJ NETCOM	20518224447	1416	AUDITORIA
+28	2016-05-15	APC CORPORACION SA	20102185633	5076	MONITOREO DE HIGIENE OCUPACIONAL
+29	2016-05-31	ICATOM  SA	20310422755	9776	MONITOREO DE HIGIENE OCUPACIONAL
+30	2016-06-28	SODEXO PERU SAC	20414766308	11361	CAPACITACION
+31	2016-07-25	SODEXO PERU SAC	20414766308	714	MONITOREO DE HIGIENE OCUPACIONAL
+32	2016-08-10	SODEXO PERU SAC	20414766308	3256	AUDITORIA
+33	2016-08-25	SODEXO PERU SAC	20414766308	15022	CAPACITACION
+34	2016-09-28	SODEXO PERU SAC	20414766308	16784	MONITOREO DE HIGIENE OCUPACIONAL
+35	2016-10-12	SODEXO PERU SAC	20414766308	5463	MONITOREO DE HIGIENE OCUPACIONAL
+36	2016-10-14	SODEXO PERU SAC	20414766308	3162	MONITOREO DE HIGIENE OCUPACIONAL
+37	2016-11-11	REFINERIA LA PAMPILLA SA	2025989594	7670	AUDITORIA
+38	2016-12-01	SODEXO PERU SAC	20414766308	1864	MONITOREO DE HIGIENE OCUPACIONAL
+39	2016-12-02	ICATOM  SA	20310422755	4896	MONITOREO DE HIGIENE OCUPACIONAL
+40	2016-12-02	SODEXO PERU SAC	20414766308	11564	MONITOREO DE HIGIENE OCUPACIONAL
+41	2016-12-03	SODEXO PERU SAC	20414766308	336	MONITOREO DE HIGIENE OCUPACIONAL
+42	2016-12-04	SODEXO PERU SAC	20414766308	336	MONITOREO DE HIGIENE OCUPACIONAL
+43	2016-12-05	SODEXO PERU SAC	20414766308	336	MONITOREO DE HIGIENE OCUPACIONAL
+44	2016-12-06	SODEXO PERU SAC	20414766308	336	MONITOREO DE HIGIENE OCUPACIONAL
+45	2016-12-19	ICATOM  SA	20310422755	4720	AUDITORIA
+46	2016-12-29	SODEXO PERU SAC	20414766308	336	MONITOREO DE HIGIENE OCUPACIONAL
+47	2016-12-30	SODEXO PERU SAC	20414766308	336	MONITOREO DE HIGIENE OCUPACIONAL
+48	2016-12-31	SODEXO PERU SAC	20414766308	3268	MONITOREO DE HIGIENE OCUPACIONAL
+49	2017-01-16	ICATOM  SA	20310422755	11425	MONITOREO DE HIGIENE OCUPACIONAL
+50	2017-02-17	CJ NETCOM SAC	2051824477	3422	AUDITORIA
+51	2017-02-23	SODEXO PERU SAC	20414766308	11577	MONITOREO DE HIGIENE OCUPACIONAL
+52	2017-04-25	SODEXO PERU SAC	20414766308	2023	MONITOREO DE HIGIENE OCUPACIONAL
+53	2017-05-10	J & V RESGUARDO SAC	20100901481	4460	MONITOREO DE HIGIENE OCUPACIONAL
+54	2017-05-15	SODEXO PERU SAC	20414766308	1771	MONITOREO DE HIGIENE OCUPACIONAL
+55	2017-05-19	CENTRO VACACIONAL DE HUAMPANI	20155140942	8463	CAPACITACION
+56	2017-05-25	CENTRO VACACIONAL DE HUAMPANI	20155140942	8463	CAPACITACION
+57	2017-06-05	SODEXO PERU SAC	20414766308	14142	MONITOREO DE HIGIENE OCUPACIONAL
+58	2017-06-09	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	3540	CAPACITACION
+59	2017-06-12	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	2006	CAPACITACION
+60	2017-06-26	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	2006	CAPACITACION
+61	2017-07-10	SODEXO PERU SAC	20414766308	2006	MONITOREO DE HIGIENE OCUPACIONAL
+62	2017-07-17	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	1180	CAPACITACION
+63	2017-07-26	SCHARFF COURIER & CARGO SA	20110964928	3327	MONITOREO DE HIGIENE OCUPACIONAL
+64	2017-07-27	CJ NETCOM SAC	2051824477	4012	MONITOREO DE HIGIENE OCUPACIONAL
+65	2017-08-08	SODEXO PERU SAC	20414766308	7988	MONITOREO DE HIGIENE OCUPACIONAL
+66	2017-08-11	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	2162	CAPACITACION
+67	2017-08-15	MUNICIPALIDAD DISTRITAL DE HUACHUPAMPA	20218598774	4500	MONITOREO DE HIGIENE OCUPACIONAL
+68	2017-08-28	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	519	CAPACITACION
+69	2017-09-08	CENTRO VACACIONAL HUAMPANI	20155140942	3431	CAPACITACION
+70	2017-09-12	EL PACIFICO VIDA CIA DE SEGUROS	20332970411	729	CAPACITACION
+71	2017-09-13	PROMECSA SAC	20392976125	665	CAPACITACION
+72	2017-09-21	PROMECSA SAC	20392976125	470	CAPACITACION
+73	2017-09-25	PROMECSA SAC	20392976125	565	CAPACITACION
+74	2017-10-04	CINETCOM 	2051822447	5734	MONITOREO DE HIGIENE OCUPACIONAL
+75	2017-10-24	NEWREST	20381235051	4165	MONITOREO DE HIGIENE OCUPACIONAL
+76	2017-10-31	SODEXO PERU SAC	20414766308	3882	MONITOREO DE HIGIENE OCUPACIONAL
+77	2017-11-08	BB TECNOLOGIA INDUSRIAL SAC	20535886114	578	CAPACITACION
+78	2017-11-13	EMPRESA DE SERVICIOS GENERALES VENTURA 	20506471291	578	AUDITORIA
+79	2017-11-14	EL PACIFICO VIDA CIA DE SEGUROS	20535886114	519	CAPACITACION
+80	2017-11-15	SODEXO PERU SAC	20414766308	5097	MONITOREO DE HIGIENE OCUPACIONAL
+81	2017-12-05	REPSOL EXPLORACION PERU	20258262728	7139	AUDITORIA
+82	2017-12-18	ICATOM  SA	20310422755	3570	MONITOREO DE HIGIENE OCUPACIONAL
+83	2017-12-21	SODEXO PERU SAC	20414766308	1180	MONITOREO DE HIGIENE OCUPACIONAL
+84	2018-01-09	KUEHNE + NAGEL	20347845150	8486	AUDITORIA
+85	2018-01-17	CJ NETCOM	20535886114	708	AUDITORIA
+86	2018-01-22	CJ NETCOM	20535886114	708	AUDITORIA
+87	2018-02-05	GERDIPAC INDUSTRIAL SAC	20160217848	1360	MONITOREO DE HIGIENE OCUPACIONAL
+88	2018-02-14	ICATOM SA	20310422755	8331	MONITOREO DE HIGIENE OCUPACIONAL
+89	2018-02-19	J & V RESGUARDO SAC	20535886114	4425	MONITOREO DE HIGIENE OCUPACIONAL
+90	2018-03-02	TELEMARKETING	20602374751	7000	MONITOREO DE HIGIENE OCUPACIONAL
+91	2018-03-07	TELEMARKETING	20602374751	4468	MONITOREO DE HIGIENE OCUPACIONAL
+92	2018-03-08	CONTRATISTA MINERAS Y CIVILES	20451460570	7292	AUDITORIA
+93	2018-03-15	PACIFICO COMPAÑÍA DE SEGUROS Y REASEGUROS	20535886114	578	AUDITORIA
+94	2018-03-17	TELEMARKETING	20602374751	680	CAPACITACION
+95	2018-03-19	TELEMARKETING	20602374751	3600	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+96	2018-03-21	TELEMARKETING	20602374751	3600	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+97	2018-03-24	TELEMARKETING	20602374751	2400	MONITOREO DE HIGIENE OCUPACIONAL
+98	2018-03-26	TELEMARKETING	20602374751	6282	MONITOREO DE HIGIENE OCUPACIONAL
+99	2018-03-27	TELEMARKETING	20602374751	2400	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+100	2018-03-28	TELEMARKETING	20602374751	2400	MONITOREO DE HIGIENE OCUPACIONAL
+101	2018-03-29	TELEMARKETING	20602374751	3600	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+102	2018-03-31	TELEMARKETING	20602374751	2451	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+103	2018-04-06	CONSULTING & AUDIT	20563056391	485	CAPACITACION
+104	2018-04-16	CONSULTING & AUDIT	20563056391	3600	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+105	2018-04-27	CONSULTING & AUDIT	20563056391	3600	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+106	2018-05-22	CONTRATISTAS GENERALES REA	20504800114	3693	MONITOREO DE HIGIENE OCUPACIONAL
+107	2018-05-31	CONTILATIN DEL PERU	20255254937	0	MONITOREO DE HIGIENE OCUPACIONAL
+108	2018-06-20	SODEXO PERU SAC	20414766308	2820.19999999999982	MONITOREO DE HIGIENE OCUPACIONAL
+109	2018-06-28	SODEXO PERU SAC	20414766308	7736.79979999999978	MONITOREO DE HIGIENE OCUPACIONAL
+110	2018-07-05	CONTILATIN DEL PERU	20255254937	6728.83199999999943	MONITOREO DE HIGIENE OCUPACIONAL
+111	2018-07-13	SODEXO PERU SAC	20414766308	2838.48999999999978	MONITOREO DE HIGIENE OCUPACIONAL
+112	2018-07-25	SODEXO PERU SAC	20414766308	3540	MONITOREO DE HIGIENE OCUPACIONAL
+113	2018-07-27	TELEMARKETING	20602374751	2999.99659999999994	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+114	2018-08-06	SODEXO PERU SAC	20414766308	25950.5600000000013	MONITOREO DE HIGIENE OCUPACIONAL
+115	2018-09-05	SODEXO PERU SAC	20414766308	16166	MONITOREO DE HIGIENE OCUPACIONAL
+116	2018-10-04	CJNETCOM	20518224477	3811.40000000000009	MONITOREO DE HIGIENE OCUPACIONAL
+117	2018-10-12	SODEXO PERU SAC	20414766308	4153.60000000000036	MONITOREO DE HIGIENE OCUPACIONAL
+118	2018-11-05	ICATOM SA	20310422755	4989.80699999999979	MONITOREO DE HIGIENE OCUPACIONAL
+119	2018-11-09	TELEMARKETING ONLINE	20543796175	27999.9958000000006	MONITOREO DE HIGIENE OCUPACIONAL
+120	2018-11-14	ITSSMA	20545472342	2183	IPER Y MAPA DE RIESGOS
+121	2018-11-21	TELEMARKETING ONLINE	20543796175	27999.9958000000006	MONITOREO DE HIGIENE OCUPACIONAL
+122	2018-11-30	CENTURY ECOLOGICAL CORPORATION	20502073401	4348.30000000000018	MONITOREO DE HIGIENE OCUPACIONAL
+123	2018-12-05	SODEXO PERU SA	20414766308	1177.63999999999987	MONITOREO DE HIGIENE OCUPACIONAL
+124	2018-12-14	ICATOM SA	20310422755	2360	AUDITORIA
+125	2019-01-01	BOART LONGYEAR S.A.C	20257364608	1532.81999999999994	MONITOREO DE HIGIENE OCUPACIONAL
+126	2019-01-18	CJ NETCOM S.A.C	20518224477	3669.80000000000018	MONITOREO DE HIGIENE OCUPACIONAL
+127	2019-01-24	SODEXO PERU S.A.C	20414766308	6212.80619999999999	MONITOREO DE HIGIENE OCUPACIONAL
+128	2019-01-25	ICATOM S.A	20310422755	2360	AUDITORIA
+129	2019-02-13	SODEXO PERU S.A.C	20414766308	8014.98479999999927	MONITOREO DE HIGIENE OCUPACIONAL
+130	2019-02-14	NEWREST PERU S.A.C	20381235051	5279.31999999999971	MONITOREO DE HIGIENE OCUPACIONAL
+131	2019-02-27	TAMALES DE CHINCHA Y OTROS S.A.C	20502068238	3475.99680000000035	MONITOREO DE HIGIENE OCUPACIONAL
+132	2019-02-28	SODEXO PERU S.A.C	20414766308	336.300000000000011	IPER Y MAPA DE RIESGOS
+133	2019-03-25	ICATOM S.A	20310422755	3540	MONITOREO DE HIGIENE OCUPACIONAL
+134	2019-03-26	SODEXO PERU S.A.C	20414766308	11800	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+135	2019-03-27	TAMALES DE CHINCHA Y OTROS S.A.C	20502068238	4507.60000000000036	MONITOREO DE HIGIENE OCUPACIONAL
+136	2019-04-15	GRAY TO GREEN S.A.C	20602574408	1767.04999999999995	MONITOREO DE HIGIENE OCUPACIONAL
+137	2019-04-23	CENTRO VACACIONAL HUAMPANI	20155140942	19959.994999999999	IPER Y MAPA DE RIESGOS
+138	2019-05-03	KAEFER KOSTEC S.A.C	20100460255	3752.40000000000009	IPER Y MAPA DE RIESGOS
+139	2019-05-10	SODEXO PERU S.A.C	20414766308	1357	MONITOREO DE HIGIENE OCUPACIONAL
+140	2019-05-17	SODEXO PERU S.A.C	20414766308	6844	AUDITORIA
+141	2019-05-30	NEWREST PERU S.A.C	20381235051	6352.88400000000001	MONITOREO DE HIGIENE OCUPACIONAL
+142	2019-06-10	CONTILATIN DEL PERU S.A	20255254937	2502.54400000000032	MONITOREO DE HIGIENE OCUPACIONAL
+143	2019-06-11	SODEXO PERU S.A.C	20414766308	9366.84000000000015	MONITOREO DE HIGIENE OCUPACIONAL
+144	2019-07-23	SODEXO PERU S.A.C	20414766308	2336.40000000000009	MONITOREO DE HIGIENE OCUPACIONAL
+145	2019-08-14	SODEXO PERU S.A.C	20414766308	4153.60000000000036	MONITOREO DE HIGIENE OCUPACIONAL
+146	2019-08-22	SODEXO PERU S.A.C	20414766308	3852.69999999999982	MONITOREO DE HIGIENE OCUPACIONAL
+147	2019-08-28	BOART LONGYEAR S.A.C	20257364608	5310	AUDITORIA
+148	2019-08-29	SODEXO PERU S.A.C	20414766308	531	MONITOREO DE HIGIENE OCUPACIONAL
+149	2019-09-03	SODEXO PERU S.A.C	20414766308	531	MONITOREO DE HIGIENE OCUPACIONAL
+150	2019-09-17	XIMESA S.A.C	20125508716	7597.61880000000019	MONITOREO DE HIGIENE OCUPACIONAL
+151	2019-09-18	BRITISH AMERICAN TOBACCO DEL PERU S.A.C	20261180937	39992.5599999999977	MONITOREO DE HIGIENE OCUPACIONAL
+152	2019-09-25	SODEXO PERU S.A.C	20414766308	531	MONITOREO DE HIGIENE OCUPACIONAL
+\.
+
+
+--
+-- TOC entry 3152 (class 0 OID 16928)
+-- Dependencies: 219
+-- Data for Name: prediccion_servicio; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.prediccion_servicio (id, servicio) FROM stdin;
+1	AUDITORIA
+2	MONITOREO DE HIGIENE OCUPACIONAL
+3	CAPACITACION
+4	IMPLEMENTACIÓN DE SISTEMAS DE GESTIÓN 
+5	IPER Y MAPA DE RIESGOS
+6	GENERAL
+\.
+
+
+--
+-- TOC entry 3183 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+
+
+--
+-- TOC entry 3184 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- TOC entry 3185 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 48, true);
+
+
+--
+-- TOC entry 3186 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
+
+
+--
+-- TOC entry 3187 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_id_seq', 1, true);
+
+
+--
+-- TOC entry 3188 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- TOC entry 3189 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+
+
+--
+-- TOC entry 3190 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 12, true);
+
+
+--
+-- TOC entry 3191 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 21, true);
+
+
+--
+-- TOC entry 3192 (class 0 OID 0)
+-- Dependencies: 220
+-- Name: prediccion_productos_producto_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prediccion_productos_producto_id_seq', 92, true);
+
+
+--
+-- TOC entry 3193 (class 0 OID 0)
+-- Dependencies: 222
+-- Name: prediccion_productos_redneuronalresultados_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prediccion_productos_redneuronalresultados_id_seq', 3, true);
+
+
+--
+-- TOC entry 3194 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: prediccion_productos_registroventa_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prediccion_productos_registroventa_id_seq', 210, true);
+
+
+--
+-- TOC entry 3195 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: prediccion_redneuronalresultados_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prediccion_redneuronalresultados_id_seq', 18, true);
+
+
+--
+-- TOC entry 3196 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: prediccion_registroventa_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prediccion_registroventa_id_seq', 152, true);
+
+
+--
+-- TOC entry 3197 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: prediccion_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.prediccion_servicio_id_seq', 6, true);
+
+
+--
+-- TOC entry 2953 (class 2606 OID 16902)
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- TOC entry 2958 (class 2606 OID 16839)
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- TOC entry 2961 (class 2606 OID 16792)
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2955 (class 2606 OID 16782)
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2948 (class 2606 OID 16825)
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- TOC entry 2950 (class 2606 OID 16774)
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2969 (class 2606 OID 16810)
+-- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2972 (class 2606 OID 16854)
+-- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_group_id_94350c0c_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- TOC entry 2963 (class 2606 OID 16800)
+-- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2975 (class 2606 OID 16818)
+-- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2978 (class 2606 OID 16868)
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- TOC entry 2966 (class 2606 OID 16896)
+-- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- TOC entry 2981 (class 2606 OID 16882)
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2943 (class 2606 OID 16766)
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- TOC entry 2945 (class 2606 OID 16764)
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2941 (class 2606 OID 16756)
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2997 (class 2606 OID 16977)
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- TOC entry 2990 (class 2606 OID 16947)
+-- Name: prediccion_productos_producto prediccion_productos_producto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_productos_producto
+    ADD CONSTRAINT prediccion_productos_producto_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2992 (class 2606 OID 16958)
+-- Name: prediccion_productos_redneuronalresultados prediccion_productos_redneuronalresultados_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_productos_redneuronalresultados
+    ADD CONSTRAINT prediccion_productos_redneuronalresultados_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2994 (class 2606 OID 16969)
+-- Name: prediccion_productos_registroventa prediccion_productos_registroventa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_productos_registroventa
+    ADD CONSTRAINT prediccion_productos_registroventa_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2984 (class 2606 OID 16914)
+-- Name: prediccion_redneuronalresultados prediccion_redneuronalresultados_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_redneuronalresultados
+    ADD CONSTRAINT prediccion_redneuronalresultados_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2986 (class 2606 OID 16925)
+-- Name: prediccion_registroventa prediccion_registroventa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_registroventa
+    ADD CONSTRAINT prediccion_registroventa_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2988 (class 2606 OID 16936)
+-- Name: prediccion_servicio prediccion_servicio_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.prediccion_servicio
+    ADD CONSTRAINT prediccion_servicio_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2951 (class 1259 OID 16903)
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- TOC entry 2956 (class 1259 OID 16840)
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- TOC entry 2959 (class 1259 OID 16841)
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- TOC entry 2946 (class 1259 OID 16826)
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- TOC entry 2967 (class 1259 OID 16856)
+-- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
+
+
+--
+-- TOC entry 2970 (class 1259 OID 16855)
+-- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
+
+
+--
+-- TOC entry 2973 (class 1259 OID 16870)
+-- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
+
+
+--
+-- TOC entry 2976 (class 1259 OID 16869)
+-- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
+
+
+--
+-- TOC entry 2964 (class 1259 OID 16897)
+-- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- TOC entry 2979 (class 1259 OID 16893)
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- TOC entry 2982 (class 1259 OID 16894)
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- TOC entry 2995 (class 1259 OID 16979)
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- TOC entry 2998 (class 1259 OID 16978)
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- TOC entry 3001 (class 2606 OID 16833)
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3000 (class 2606 OID 16828)
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 2999 (class 2606 OID 16819)
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3003 (class 2606 OID 16848)
+-- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_group_id_97559544_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3002 (class 2606 OID 16843)
+-- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3005 (class 2606 OID 16862)
+-- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3004 (class 2606 OID 16857)
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3006 (class 2606 OID 16883)
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- TOC entry 3007 (class 2606 OID 16888)
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+-- Completed on 2019-10-29 02:44:50 CST
+
+--
+-- PostgreSQL database dump complete
+--
+

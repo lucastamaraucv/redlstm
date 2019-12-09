@@ -1,0 +1,389 @@
+{% extends 'graph_base.html' %}
+{% load static %}
+
+{% block titulo %}{% endblock titulo %}
+
+
+<!--Primera Gráfica-->
+{% block grafica %}
+
+
+
+{% if 'productos' in request.path %}
+    <!-- Bar Chart -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h3>Periodo</h3>
+            <ul >      
+                <div class="row">
+                    <div class="col-xl-4 col-lg-3">
+                        <li >
+                            <a  href="{% url 'productos_pronostico_general' 'DIAS' clasificacion_anterior %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>Días</span></a>
+                        </li>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-3">
+                        <li >
+                            <a href="{% url 'productos_pronostico_general' 'SEMANAS' clasificacion_anterior %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>Semanas</span></a>
+                        </li>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-3">
+                        <li >
+                            <a  href="{% url 'productos_pronostico_general' 'MESES' clasificacion_anterior %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>Meses</span></a>
+                        </li>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+            <!-- Bar Chart -->
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3>Tipo de servicio</h3>
+                    <ul>
+                        <div class="row">
+                            {% if servicios %}
+                                {% for servicio in servicios %}
+                                    <div class="col-xl-4 col-lg-3">
+                                        <li >
+                                            <a  href="{% url 'productos_pronostico_general' periodo_anterior servicio.servicio %}">
+                                                <i class="fas fa-fw fa-chart-area"></i>
+                                                <span>{{servicio.servicio}}</span></a>
+                                        </li>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </ul>
+                </div>
+              </div>
+{% else %}
+    <!-- Bar Chart -->
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <h3>Periodo</h3>
+            <ul >      
+                <div class="row">
+                    <div class="col-xl-4 col-lg-3">
+                        <li >
+                            <a  href="{% url 'pronostico_general' 'DIAS' clasificacion_anterior %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>Días</span></a>
+                        </li>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-3">
+                        <li >
+                            <a href="{% url 'pronostico_general' 'SEMANAS' clasificacion_anterior %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>Semanas</span></a>
+                        </li>
+                    </div>
+
+                    <div class="col-xl-4 col-lg-3">
+                        <li >
+                            <a  href="{% url 'pronostico_general' 'MESES' clasificacion_anterior %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>Meses</span></a>
+                        </li>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+            <!-- Bar Chart -->
+              <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h3>Tipo de servicio</h3>
+                    <ul>
+                        <div class="row">
+                            {% if servicios %}
+                                {% for servicio in servicios %}
+                                    <div class="col-xl-4 col-lg-3">
+                                        <li >
+                                            <a  href="{% url 'pronostico_general' periodo_anterior servicio.servicio %}">
+                                                <i class="fas fa-fw fa-chart-area"></i>
+                                                <span>{{servicio.servicio}}</span></a>
+                                        </li>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </ul>
+                </div>
+              </div>
+{% endif %}
+
+
+{% if train %}
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h3>Periodo seleccionado</h3>
+        <div class="row">
+
+            <div class="col-xl-6 col-lg-3" style="padding:3%">
+                <h5>Desde:</h5>
+                <select id="desde" onchange="drawChart();">
+                    {% for dato in train  %}
+                    <option id="{{dato.id}}">{{dato.fecha}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-xl-6 col-lg-3" style="padding:3%">
+                <h5>Hasta:</h5>
+                <select id="hasta" onchange="drawChart();">
+                    {% for dato in train  %}
+                    <option id="{{dato.id}}">{{dato.fecha}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-4 col-lg-2">
+                Promedio DAM: <div id="dam"></div>
+            </div>
+            <div class="col-xl-4 col-lg-2">
+                Promedio PEMA (%): <div id="pema"></div>
+            </div>
+            <div class="col-xl-4 col-lg-2">
+                Promedio RMSE: <div id="rmse"></div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+{% if objects %}
+{% for i in objects %}
+
+<div class='card shadow mb-4'>
+    <div class='card-header py-3'>
+        <h6 class='m-0 font-weight-bold text-primary'>Histórico vs entrenamiento</h6>
+    </div>
+
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            const options_1 = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            var e = document.getElementById("desde");
+            var h = document.getElementById("hasta");
+            if (e != null && h!=null) {
+                var value = e.options[e.selectedIndex].id;
+                var valuea = h.options[h.selectedIndex].id;
+            };
+
+            {% if train %}
+
+                var all_data = [['Fechas', 'Precio real (Soles)', 'Pronóstico (Soles)']]
+                var all_data_dam = [['Fechas', 'DAM (Soles)']]
+                var all_data_pema = [['Fechas', 'PEMA (%)']]
+                var all_data_rmse = [['Fechas', 'RMSE (Soles^2)']]
+                var all_data_vars = []
+                var all_data_csv = [['Fechas', 'Precio real (Soles)', 'Pronóstico (Soles)', 'DAM (Soles)', 'PEMA (%)', 'RMSE (Soles^2)', 'Fechas futuro' , 'Precio futuro (Soles)']]
+
+                {% for dato in train %}
+                    if( {{dato.id}} >= value && {{dato.id}} <= valuea || value===valuea) {
+                        all_data.push([new Date('{{ dato.fecha.isoformat }}'), {{ dato.real }}, {{ dato.precio }}]);
+                        all_data_dam.push([new Date('{{ dato.fecha.isoformat }}'), {{ dato.dam }}]);
+                        all_data_pema.push([new Date('{{ dato.fecha.isoformat }}'), {{ dato.pema }}]);
+                        all_data_rmse.push([new Date('{{ dato.fecha.isoformat }}'), {{ dato.rmse }}]);
+                        all_data_vars.push([{{ dato.dam }}, {{ dato.pema }}, {{ dato.rmse }}]);
+                    };
+                {% endfor %}
+
+            {% endif %}
+
+            {% if test %}
+                var all_data_test = [['Fechas', 'Precio (Soles)']]
+                {% for dato in test %}
+                    if( {{dato.id}} >= value && {{dato.id}} <= valuea || value===valuea) {
+                        all_data_test.push([new Date('{{ dato.future.isoformat }}'), {{ dato.precio }}]);
+                    };
+                {% endfor %}
+            {% endif %}
+
+            {% if train and test%}
+
+                for (let i = 1; i <= all_data.length; i++) {
+                    if (typeof all_data_vars[i] !== "undefined"){
+                        all_data_csv.push([all_data[i][0], all_data[i][1], all_data[i][2], all_data_vars[i-1][0], all_data_vars[i-1][1], all_data_vars[i-1][2], all_data_test[i][0], all_data_test[i][1]]);
+                    }
+                }
+
+            {% endif %}
+            
+
+        var data = google.visualization.arrayToDataTable(
+            all_data
+        );
+
+        var data_test = google.visualization.arrayToDataTable(
+            all_data_test
+        );
+
+        var data_dam = google.visualization.arrayToDataTable(
+            all_data_dam
+        );
+
+        var data_pema = google.visualization.arrayToDataTable(
+            all_data_pema
+        );
+
+        var data_rmse = google.visualization.arrayToDataTable(
+            all_data_rmse
+        );
+
+        var csvContent = '';
+        all_data_csv.forEach(function(infoArray, index) {
+        dataString = infoArray.join(';');
+        csvContent += index < all_data_csv.length ? dataString + '\n' : dataString;
+        });
+
+        // The download function takes a CSV string, the filename and mimeType as parameters
+        // Scroll/look down at the bottom of this snippet to see how download is called
+        var download = function(content, fileName, mimeType) {
+            var a = document.createElement('a');
+            mimeType = mimeType || 'application/octet-stream';
+            a.href = URL.createObjectURL(new Blob([content], {
+            type: mimeType
+            }));
+            a.setAttribute('download', fileName);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        document.getElementById("dwn-btn").addEventListener("click", function(){
+            download(csvContent, '{{ request.get_full_path }}', 'text/csv;encoding:utf-8');
+        }, false);
+
+        var options = {
+             
+            curveType: 'function',
+            legend: { position: 'bottom' },
+            explorer: {
+                axis: 'horizontal',
+                keepInBounds: true,
+                maxZoomIn: 140.0
+            }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        var chart_test = new google.visualization.LineChart(document.getElementById('curve_chart_test'));
+        var chart_dam = new google.visualization.LineChart(document.getElementById('curve_chart_dam'));
+        var chart_pema = new google.visualization.LineChart(document.getElementById('curve_chart_pema'));
+        var chart_rmse = new google.visualization.LineChart(document.getElementById('curve_chart_rmse'));
+
+        chart.draw(data, options);
+        chart_test.draw(data_test, options);
+        chart_dam.draw(data_dam, options);
+        chart_pema.draw(data_pema, options);
+        chart_rmse.draw(data_rmse, options);
+
+        var dam = 0
+        var pema = 0
+        var rmse = 0
+
+        if (all_data_vars.length!=0){
+            for (i=0; i<=all_data_vars.length; i++ ){
+                if (typeof all_data_vars[i] !== "undefined"){
+                    dam += all_data_vars[i][0];
+                    pema += all_data_vars[i][1];
+                    rmse += all_data_vars[i][2];
+                }
+            }
+
+            dam /= all_data_vars.length
+            pema /= all_data_vars.length
+            rmse /= all_data_vars.length
+
+            document.getElementById("dam").innerHTML=dam;
+            document.getElementById("pema").innerHTML=pema;
+            document.getElementById("rmse").innerHTML=rmse;
+        
+        }
+      
+    }
+
+
+    </script>
+
+    <div id="curve_chart" style="width: 100%; height: 1000px"></div>
+
+    <div class='text-center'>
+    </div>
+    <br>
+    <center>Figura 1. Histórico vs entrenamiento</center>
+    <div class="row">
+        <div class="col-md-4">
+            <input type="button" id="dwn-btn" value="Descargar csv"/>
+        </div>
+    </div>
+</div>
+
+<div class='card shadow mb-4'>
+    <div class='card-header py-3'>
+        <h6 class='m-0 font-weight-bold text-primary'>Pronóstico</h6>
+    </div>
+    <div id="curve_chart_test" style="width: 100%; height: 1000px"></div>
+    <div class='text-center'>
+    </div>
+    <br>
+    <center>Figura 5. Pronóstico</center>
+</div>
+
+<div class='card shadow mb-4'>
+    <div class='card-header py-3'>
+        <h6 class='m-0 font-weight-bold text-primary'>DAM</h6>
+    </div>
+    <div id="curve_chart_dam" style="width: 100%; height: 1000px"></div>
+    <div class='text-center'>
+    </div>
+    <br>
+    <center>Figura 5. DAM</center>
+</div>
+
+<div class='card shadow mb-4'>
+    <div class='card-header py-3'>
+        <h6 class='m-0 font-weight-bold text-primary'>PEMA</h6>
+    </div>
+    <div id="curve_chart_pema" style="width: 100%; height: 1000px"></div>
+    <div class='text-center'>
+    </div>
+    <br>
+    <center>Figura 5. PEMA</center>
+</div>
+
+<div class='card shadow mb-4'>
+    <div class='card-header py-3'>
+        <h6 class='m-0 font-weight-bold text-primary'>RMSE</h6>
+    </div>
+    <div id="curve_chart_rmse" style="width: 100%; height: 1000px"></div>
+    <div class='text-center'>
+    </div>
+    <br>
+    <center>Figura 5. RMSE</center>
+</div>
+
+{% endfor %}
+{% endif %}
+{% endblock grafica %}

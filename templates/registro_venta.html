@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+
+{% block main %}
+
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-2 text-gray-800">Registro de Venta</h1>
+
+          <!-- Content Row -->
+          <div class="row">
+
+            <div class="col-xl-8 col-lg-7">
+
+                <!-- Area Chart -->
+                <div class="card-body">
+                    <div class="chart-area">
+                    <form method="post">{% csrf_token %}
+                        {% bootstrap_form form %}
+                        <button type="submit" class="btn btn-secondary btn-block">Registrar</button>
+                    </form>
+                    </div>
+                </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+  {% endblock main %}
+

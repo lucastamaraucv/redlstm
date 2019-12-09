@@ -1,0 +1,112 @@
+{% extends 'graph_base.html' %}
+{% load static %}
+
+{% block titulo %}{% endblock titulo %}
+
+
+<!--Primera Gráfica-->
+{% block grafica %}  
+    {% if objects %}
+        <div class="card-body">
+            <h1 class="h3 mb-2 text-gray-800">Ventas</h1>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>
+                            <center>
+                                No. Comprobante
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                Fecha
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                Empresa
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                RUC
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                Precio
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                Tipo
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                Editar
+                            </center>
+                        </th>
+                        <th>
+                            <center>
+                                Eliminar
+                            </center>
+                        </th>
+                    </tr>
+                    </thead>
+                    {% for i in objects %}
+                        <tbody>
+                            <tr>
+                            <td>
+                                <center>
+                                    {{i.id}}
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    {{i.fecha}}
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    {{i.empresa}}
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    {{i.ruc}}
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    {{i.precio}}
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    {{i.tipo}}
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    <a class="btn btn-warning" href="{% url 'venta_update' i.id %}">
+                                        <span>Editar servicio</span></a>
+                                </center>
+                            </td>
+                            <td>
+                                <center>
+                                    <a class="btn btn-danger" href="{% url 'venta_delete' i.id %}">
+                                        <span>Eliminar servicio</span></a>
+                                </center>
+                            </td>
+                            </tr>
+                        </tbody>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock grafica %}

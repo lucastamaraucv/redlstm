@@ -1,0 +1,120 @@
+{% extends 'graph_base.html' %}
+{% load static %}
+
+{% block titulo %}{% endblock titulo %}
+
+
+<!--Primera Gráfica-->
+{% block grafica %}
+{% if objects %}
+<div class="card-body">
+    <h1 class="h3 mb-2 text-gray-800">Redes Neuronales Entrenadas</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>
+                        <center>
+                            ID
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            Clasificacion
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            Periodo
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            PEMA
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            DAM
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            RMSE
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            Look Back
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            Neuronas
+                        </center>
+                    </th>
+                    <th>
+                        <center>
+                            Épocas
+                        </center>
+                    </th>
+                </tr>
+            </thead>
+            {% for i in objects %}
+            <tbody>
+                <tr>
+                    <td>
+                        <center>
+                            {{i.id}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.clasificacion}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.periodo}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.pema}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.dam}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.rmse}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.look_back}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.neuronas}}
+                        </center>
+                    </td>
+                    <td>
+                        <center>
+                            {{i.epocas}}
+                        </center>
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+</div>
+{% endif %}
+
+{% endblock grafica %}
